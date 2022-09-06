@@ -1,20 +1,19 @@
 import Head from 'next/head';
 import useSWR from 'swr';
+import { useRouter } from 'next/router';
 
-// const data = fetch('http://localhost/next-wp/graphql', {
-//   headers: { 'Content-Type': 'application/json' },
-//   method: 'POST',
-//   body: JSON.stringify({ test: 'value' }),
-// });
-// console.log(data);
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function Page() {
-  const { data, error } = useSWR('/api/page/sample-page', fetcher);
+export default function Home() {
+  const router = useRouter();
+  const {
+    query: { slug },
+  } = router;
+  const { data, error } = useSWR(`/api/page/${slug}`, fetcher);
+
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
-  console.log(data);
   return (
     <div>
       <Head>
